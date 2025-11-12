@@ -1,0 +1,504 @@
+/* ========== גופנים ומשתנים גלובליים ========== */
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #4fc3f7;
+    --secondary-color: #81d4fa;
+    --accent-color: #00acc1;
+    --bg-gradient: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #80deea 100%);
+    --text-color: #1f2937;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.25);
+    --border-radius: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Heebo', sans-serif;
+    direction: rtl;
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--text-color);
+}
+
+/* ========== Container ראשי ========== */
+.flipbook-container {
+    width: 95vw;
+    height: 95vh;
+    max-width: 1400px;
+    max-height: 900px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* ========== ניווט עליון ========== */
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 15px 30px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
+    position: relative;
+}
+
+/* לוגו */
+.logo {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+/* כותרת */
+.title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    text-align: center;
+    margin: 0;
+    flex: 1;
+}
+
+.nav-btn {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+}
+
+.nav-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: var(--shadow-lg);
+}
+
+.nav-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.page-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-color);
+    min-width: 100px;
+    justify-content: flex-start;
+    flex-shrink: 0;
+}
+
+.separator {
+    color: #9ca3af;
+}
+
+/* ========== אזור הספר ========== */
+.book-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 2000px;
+    position: relative;
+    overflow: visible;
+}
+
+/* כפתורי הפיכת דף בתוך החוברת */
+.page-turn-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+    z-index: 1000;
+    color: var(--primary-color);
+}
+
+.page-turn-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: var(--shadow-lg);
+}
+
+.page-turn-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.page-turn-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: translateY(-50%);
+}
+
+/* כפתור הבא - בצד ימין */
+.next-page-btn {
+    right: -35px;
+}
+
+/* כפתור קודם - בצד שמאל */
+.prev-page-btn {
+    left: -35px;
+}
+
+.book {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    max-height: 800px;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== עמודים ========== */
+.page {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+    box-shadow: var(--shadow-xl);
+}
+
+.page-right {
+    right: 0;
+    transform-origin: left center;
+}
+
+.page-left {
+    left: 0;
+    transform-origin: right center;
+}
+
+.page-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.page-content canvas {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* מספר עמוד */
+.page-number {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 5px 12px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    z-index: 10;
+}
+
+/* אפקט הפיכת עמוד - משמאל לימין */
+.page-right.flipping {
+    transform: rotateY(180deg);
+    z-index: 100;
+}
+
+.page-left.flipping {
+    transform: rotateY(-180deg);
+    z-index: 100;
+}
+
+.page-right.flipping-reverse {
+    transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+    z-index: 100;
+}
+
+.page-left.flipping-reverse {
+    transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+    z-index: 100;
+}
+
+/* אפקט צל דינמי */
+.page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.page:hover::before {
+    opacity: 1;
+}
+
+/* ========== פקדים תחתונים ========== */
+.controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px 30px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
+}
+
+.control-btn {
+    width: 45px;
+    height: 45px;
+    border: none;
+    background: white;
+    color: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    border: 2px solid #e5e7eb;
+}
+
+.control-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
+}
+
+.control-btn:active {
+    transform: translateY(0) scale(0.95);
+}
+
+/* ========== Loading ========== */
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    background: white;
+    padding: 40px 60px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-xl);
+    z-index: 1000;
+}
+
+.loading.hidden {
+    display: none;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f4f6;
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+/* ========== מסך מלא ========== */
+.flipbook-container:fullscreen {
+    max-width: none;
+    max-height: none;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* ========== אנימציות נוספות ========== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* אפקט ניירת */
+.page::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+    pointer-events: none;
+}
+
+.page:hover::after {
+    transform: translateX(100%);
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+    .flipbook-container {
+        width: 100vw;
+        height: 100vh;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .navigation, .controls {
+        padding: 10px 15px;
+        gap: 15px;
+    }
+
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .control-btn {
+        width: 38px;
+        height: 38px;
+    }
+
+    .page-info {
+        font-size: 1rem;
+        min-width: 80px;
+    }
+
+    .page {
+        width: 100%;
+    }
+
+    .page-left, .page-right {
+        position: relative;
+        left: 0;
+        right: 0;
+    }
+}
+
+/* ========== אפקטים מיוחדים ========== */
+.book:hover {
+    transform: scale(1.01);
+}
+
+/* גלואו על כפתורים פעילים */
+.nav-btn:not(:disabled):hover,
+.control-btn:hover {
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+}
+
+/* אפקט מעבר חלק בין עמודים */
+.page {
+    will-change: transform;
+}
+
+/* אפקט צללים דינמי */
+.book {
+    filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.15));
+}
+
+/* סגנון גלילה מותאם */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
