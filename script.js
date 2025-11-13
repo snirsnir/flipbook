@@ -75,20 +75,33 @@ async function renderAllPages() {
     const fragment = document.createDocumentFragment();
 
     // רינדור בעברית:
-    // עמוד 1 = ימין (שער בודד)
+    // עמוד 1 = שמאל (שער בודד)
     // עמוד 2 = ימין, עמוד 3 = שמאל (זוג ראשון)
     // עמוד 4 = ימין, עמוד 5 = שמאל (זוג שני) וכן הלאה
+
+    // תחילה רנדר את כל העמודים הימניים (זוגיים), אחר כך את השמאליים (אי-זוגיים)
+    const pages = [];
     for (let i = 1; i <= state.totalPages; i++) {
         let side;
         if (i === 1) {
-            side = 'right'; // שער
+            side = 'left'; // שער
         } else if (i % 2 === 0) {
             side = 'right'; // עמודים זוגיים (2,4,6...) = ימין
         } else {
             side = 'left'; // עמודים אי-זוגיים (3,5,7...) = שמאל
         }
+        pages.push({ num: i, side: side });
+    }
 
-        const page = await createPageElement(i, side);
+    // מיין: תחילה עמודים ימניים, אחר כך שמאליים
+    pages.sort((a, b) => {
+        if (a.side === 'right' && b.side === 'left') return -1;
+        if (a.side === 'left' && b.side === 'right') return 1;
+        return a.num - b.num;
+    });
+
+    for (const pageInfo of pages) {
+        const page = await createPageElement(pageInfo.num, pageInfo.side);
         fragment.appendChild(page);
     }
 
@@ -183,16 +196,25 @@ async function nextPage() {
             state.pages[3].style.zIndex = 1;
         }
 
-        // הפוך את עמוד 1
+        // הפוך את עמוד 1 (ימינה) - אנימציה של העברת דף משמאל לימין
         if (page1) {
             page1.style.zIndex = 10;
-            await flipPageReverse(page1, 'right');
+            page1.classList.add('flipping');
+
+            playFlipSound();
+
+            await new Promise(resolve => setTimeout(resolve, CONFIG.animationDuration));
+
+            // הסתר את העמוד
+            page1.style.display = 'none';
+            page1.classList.remove('flipping');
+            page1.style.transform = '';
         }
 
         state.currentPage = 2; // עובר לעמוד 2 (הימני הראשון)
     } else {
-        // במצב רגיל, הופך את העמוד הימני (זוגי)
-        const currentRightPage = state.pages[currentPageNum]; // העמוד הימני (זוגי)
+        // במצב רגיל, הופך את העמוד השמאלי (אי-זוגי) ימינה
+        const currentLeftPage = state.pages[currentPageNum + 1]; // העמוד השמאלי (אי-זוגי)
 
         // הצג את העמודים הבאים
         const nextRight = state.pages[currentPageNum + 2];
@@ -207,10 +229,10 @@ async function nextPage() {
             nextLeft.style.zIndex = 1;
         }
 
-        // הפוך את העמוד הימני הנוכחי
-        if (currentRightPage) {
-            currentRightPage.style.zIndex = 10;
-            await flipPageReverse(currentRightPage, 'right');
+        // הפוך את העמוד השמאלי הנוכחי ימינה
+        if (currentLeftPage) {
+            currentLeftPage.style.zIndex = 10;
+            await flipPage(currentLeftPage, 'left');
         }
 
         state.currentPage += 2;
@@ -231,24 +253,45 @@ async function prevPage() {
 
     // אם בעמוד 2, חוזר לעמוד 1 (שער בלבד)
     if (currentPageNum === 2) {
+        // הצג את עמוד 1 מאחורה
         const page1 = state.pages[1];
 
         if (page1) {
-            page1.style.zIndex = 10;
-            await flipPage(page1, 'right');
+            page1.style.display = 'block';
+            page1.style.zIndex = 1;
+        }
+
+        // הפוך את עמוד 2 (הימני) אחורה
+        const page2 = state.pages[2];
+        if (page2) {
+            page2.style.zIndex = 10;
+            await flipPage(page2, 'right');
         }
 
         state.currentPage = 1;
     } else {
         // במצב רגיל, חוזר 2 עמודים אחורה
-        state.currentPage -= 2;
+        const prevRight = state.pages[currentPageNum - 2]; // העמוד הימני הקודם (זוגי)
+        const prevLeft = state.pages[currentPageNum - 1]; // העמוד השמאלי הקודם (אי-זוגי)
 
-        const prevRightPage = state.pages[state.currentPage]; // העמוד הימני (זוגי)
-
-        if (prevRightPage) {
-            prevRightPage.style.zIndex = 10;
-            await flipPage(prevRightPage, 'right');
+        // הצג את הזוג הקודם מאחורה
+        if (prevRight) {
+            prevRight.style.display = 'block';
+            prevRight.style.zIndex = 1;
         }
+        if (prevLeft) {
+            prevLeft.style.display = 'block';
+            prevLeft.style.zIndex = 1;
+        }
+
+        // הפוך את העמוד הימני הנוכחי אחורה
+        const currentRightPage = state.pages[currentPageNum];
+        if (currentRightPage) {
+            currentRightPage.style.zIndex = 10;
+            await flipPage(currentRightPage, 'right');
+        }
+
+        state.currentPage -= 2;
     }
 
     showCurrentPages();
@@ -274,8 +317,12 @@ function flipPage(pageElement, direction) {
 // ========== אנימציית הפיכה הפוכה ==========
 function flipPageReverse(pageElement, direction) {
     return new Promise((resolve) => {
-        // התחל במצב הפוך (180 מעלות)
-        pageElement.style.transform = 'rotateY(180deg)';
+        // קבע את הזווית ההתחלתית בהתאם לצד
+        const isLeft = pageElement.classList.contains('page-left');
+        const startAngle = isLeft ? -180 : 180;
+
+        // התחל במצב הפוך
+        pageElement.style.transform = `rotateY(${startAngle}deg)`;
         pageElement.style.display = 'block';
 
         playFlipSound();
