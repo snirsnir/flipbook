@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סילבוס פרויקט חריש - טכנודע</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 20px 40px;
+            border-radius: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            border-bottom: 3px solid #e8f4f8;
+        }
+
+        .logo {
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .buttons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .syllabus-btn {
+            background: white;
+            color: #2c3e50;
+            border: 2px solid #e8f4f8;
+            padding: 25px 30px;
+            font-size: 1.2em;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .syllabus-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #a8d5e2;
+            background: #f0f9ff;
+        }
+
+        .syllabus-btn.active {
+            background: linear-gradient(135deg, #a8d5e2 0%, #ffd6e0 100%);
+            border-color: #a8d5e2;
+            color: #2c3e50;
+            transform: translateY(-2px);
+        }
+
+        .syllabus-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(168, 213, 226, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .syllabus-btn:hover::before {
+            left: 100%;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.06);
+            display: none;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid #e8f4f8;
+        }
+
+        .content-area.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .lesson-item {
+            background: #fefefe;
+            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: 10px;
+            border-right: 4px solid #ffd6e0;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.04);
+        }
+
+        .lesson-item:hover {
+            transform: translateX(-8px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            background: #fffbfc;
+            border-right-color: #ffb3c6;
+        }
+
+        .lesson-item:nth-child(even) {
+            border-right-color: #a8d5e2;
+        }
+
+        .lesson-item:nth-child(even):hover {
+            border-right-color: #7ec8e3;
+            background: #f0f9ff;
+        }
+
+        .lesson-item:nth-child(3n) {
+            border-right-color: #c3aed6;
+        }
+
+        .lesson-item:nth-child(3n):hover {
+            border-right-color: #a78bca;
+            background: #faf7ff;
+        }
+
+        .lesson-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd6e0 0%, #ffb3c6 100%);
+            color: #2c3e50;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 10px;
+            font-size: 0.9em;
+            box-shadow: 0 2px 6px rgba(255, 182, 193, 0.3);
+        }
+
+        .lesson-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .lesson-description {
+            color: #555;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #a8d5e2;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .logo {
+                height: 50px;
+            }
+
+            .title {
+                font-size: 1.8em;
+            }
+
+            .buttons-container {
+                grid-template-columns: 1fr;
+            }
+
+            .syllabus-btn {
+                font-size: 1.1em;
+                padding: 15px 20px;
+            }
+
+            .content-area {
+                padding: 20px;
+            }
+
+            .section-title {
+                font-size: 1.5em;
+            }
+
+            .lesson-title {
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .title {
+                font-size: 1.5em;
+                margin-bottom: 20px;
+            }
+
+            .lesson-item {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://media.getmood.io/warehouse/dynamic/687248.jpg" alt="טכנודע" class="logo">
+            <img src="https://harish.smarticket.co.il/uploads/upld6319f06d47aab043338712.png" alt="חריש" class="logo">
+        </div>
+
+        <h1 class="title">סילבוס פרויקט חריש</h1>
+
+        <div class="buttons-container">
+            <button class="syllabus-btn" onclick="showSyllabus('grade1')">כיתות א'</button>
+            <button class="syllabus-btn" onclick="showSyllabus('afternoon')">אחר הצהריים - יסודי</button>
+            <button class="syllabus-btn" onclick="showSyllabus('morning')">חטיבות - שעות בוקר</button>
+            <button class="syllabus-btn" onclick="showSyllabus('special')">צרכים מיוחדים</button>
+        </div>
+
+        <!-- כיתות א' -->
+        <div id="grade1" class="content-area">
+            <h2 class="section-title">סילבוס לכיתות א'</h2>
+            
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">שיעור 1</span>
+                    על טעם ועל ריח
+                </div>
+                <div class="lesson-description">
+                    מסע חושי מופלא אל עולם הטעמים והריחות! התלמידים יגלו את המנגנונים המופלאים של חושי הטעם והריח, ויבינו את הקשר המפתיע ביניהם. באמצעות התנסויות חווייתיות, הם יכירו את הקולטנים המיוחדים על הלשון, יחקרו כיצד המוח מפענח ריחות שונים, ויתנסו בניסויים שימחישו כיצד שני החושים הללו משפיעים זה על זה. פעילות מרתקת המשתלבת בצורה מושלמת בתכנית הלימודים בנושא מערכות תקשורת בגוף.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">שיעור 2</span>
+                    רואים עולם
+                </div>
+                <div class="lesson-description">
+                    חוויה מאירת עיניים שתפקח את עיני התלמידים! בסדנה מרתקת זו, התלמידים יצללו לעומק חוש הראייה האנושי ויגלו כיצד אנו תופסים צורות וצבעים. הם יתנסו בטכנולוגיות מתקדמות המשפרות את יכולת הראייה - מזכוכית מגדלת ועדשות ועד למיקרוסקופ דיגיטלי, יחקרו את הפלא של ראייה תלת-ממדית, ואף יתנסו בראייה דרך "עיניים" של בעלי חיים שונים.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">שיעור 3</span>
+                    העולם בצבע
+                </div>
+                <div class="lesson-description">
+                    הרפתקה צבעונית שתצבע את עולם התלמידים! בסדנה חווייתית זו, התלמידים יגלו את הקסם שבשלושת צבעי היסוד - אדום, כחול וצהוב - ויבינו כיצד מהם נולדים כל הצבעים שבעולם. הם יתנסו באמנות ערבוב הצבעים, ייצרו גוונים חדשים בעצמם, ובשיאה של הפעילות יחשפו לכרומטוגרפיה - טכניקה מדעית מרתקת לפירוק צבעים.
+                </div>
+            </div>
+        </div>
+
+        <!-- אחר הצהריים - יסודי -->
+        <div id="afternoon" class="content-area">
+            <h2 class="section-title">אחר הצהריים - יסודי</h2>
+            
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 1</span>
+                    פיסיקה בפארק המדע
+                </div>
+                <div class="lesson-description">
+                    היכרות עם עקרונות פיסיקליים בסיסיים דרך ניסויים אינטראקטיביים ופעילויות מעשיות בפארק המדע. התלמידים יחקרו כוחות, תנועה ואנרגיה בצורה חווייתית.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 2</span>
+                    מכניקת הנוזלים
+                </div>
+                <div class="lesson-description">
+                    גילוי תכונות מיוחדות של נוזלים - לחץ, זרימה וציפה. התלמידים יתנסו בניסויים המדגימים את עקרונות ארכימדס ופסקל.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 3</span>
+                    מרכז כובד
+                </div>
+                <div class="lesson-description">
+                    חקר מושג מרכז הכובד והשפעתו על יציבות ושיווי משקל. התלמידים יבנו מבנים ויבדקו את נקודות האיזון שלהם.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 4</span>
+                    תעופה
+                </div>
+                <div class="lesson-description">
+                    הבנת עקרונות התעופה - כיצד מטוסים עפים? לימוד על כוחות העילוי, הגרר והדחף. בניית מטוסי נייר ורקטות פשוטות.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 5</span>
+                    מצבי צבירה
+                </div>
+                <div class="lesson-description">
+                    היכרות עם שלושת מצבי הצבירה - מוצק, נוזל וגז. התלמידים יבחנו מעברים בין מצבי צבירה ויבינו את תפקיד הטמפרטורה.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 6</span>
+                    תערובות ותרכובות
+                </div>
+                <div class="lesson-description">
+                    הבחנה בין תערובות לתרכובות כימיות. התלמידים ילמדו שיטות להפרדת תערובות כמו סינון, אידוי וכרומטוגרפיה.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 7</span>
+                    אינדיקטורים וכתבי סתרים
+                </div>
+                <div class="lesson-description">
+                    גילוי עולם האינדיקטורים הכימיים. התלמידים יכינו אינדיקטורים טבעיים מירקות ופירות ויכתבו כתבי סוד בדיו בלתי נראית.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 8</span>
+                    מערכת השמש
+                </div>
+                <div class="lesson-description">
+                    מסע אל מערכת השמש - היכרות עם השמש, כוכבי הלכת, ירחים ועצמי שמיים נוספים. התלמידים יבנו מודלים של מערכת השמש.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 9</span>
+                    חדר בריחה - אבודים במערכת השמש
+                </div>
+                <div class="lesson-description">
+                    פעילות אינטראקטיבית מרתקת בה התלמידים פותרים חידות ואתגרים הקשורים למערכת השמש כדי "לברוח" מהחדר.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 10</span>
+                    מסע אל החללית האבודה - מוזיאון המדע
+                </div>
+                <div class="lesson-description">
+                    סיור חוויתי במוזיאון המדע עם משימות וחידות הקשורות למדעי החלל והטכנולוגיה החללית.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 11</span>
+                    סדנת הישרדות בכוכב קריפטון
+                </div>
+                <div class="lesson-description">
+                    פעילות יצירתית בה התלמידים מתכננים איך לשרוד על כוכב זר, מתמודדים עם אתגרי סביבה ייחודיים. אופציה לביקור בפלנטריום.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 12</span>
+                    המנוע החשמלי
+                </div>
+                <div class="lesson-description">
+                    הבנת עקרון פעולת המנוע החשמלי והקשר בין חשמל למגנטיות. התלמידים יבנו מנוע פשוט בעצמם.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 13</span>
+                    טילים
+                </div>
+                <div class="lesson-description">
+                    לימוד עקרונות הדחף והתנופה דרך בניית וירי טילים. התלמידים יבינו את חוק ניוטון השלישי בפעולה.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 14</span>
+                    תחנת הכוח
+                </div>
+                <div class="lesson-description">
+                    היכרות עם מקורות אנרגיה שונים ותחנות כוח. התלמידים יבנו מודלים של תחנות כוח ויבינו את המרת האנרגיה.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 15</span>
+                    השאלון החשמלי - סיכום התכנית
+                </div>
+                <div class="lesson-description">
+                    פעילות מסכמת אינטראקטיבית בה התלמידים עונים על שאלות בשאלון חשמלי ומדגימים את הידע שרכשו לאורך התכנית.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 16</span>
+                    מה צופנים הכוכבים
+                </div>
+                <div class="lesson-description">
+                    מסע מרתק אל עולם האסטרונומיה והמיתולוגיה. התלמידים ילמדו על קבוצות כוכבים, מזלות ותצורות שמיימיות, ויגלו את הסיפורים והמסרים המוצפנים בכוכבים.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 17</span>
+                    כסף בין כוכבים
+                </div>
+                <div class="lesson-description">
+                    חקר כלכלת החלל והעתיד של תיירות חללית. התלמידים ילמדו על המשאבים בחלל, כריית אסטרואידים, ויתכננו משימות כלכליות בחלל.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 18</span>
+                    ממציאים ומגלים במציאות רבודה
+                </div>
+                <div class="lesson-description">
+                    התנסות בטכנולוגיית מציאות רבודה (AR) והכרת ממציאים ומגלים דרך עולם וירטואלי. התלמידים יחקרו תגליות מדעיות באמצעות משקפי AR וטכנולוגיה מתקדמת.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 19</span>
+                    כלואים במוזיאון המדע
+                </div>
+                <div class="lesson-description">
+                    חדר בריחה מרתק במוזיאון המדע. התלמידים יפתרו חידות מדעיות ואתגרים הדורשים חשיבה יצירתית ועבודת צוות כדי "לברוח" מהמוזיאון.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 20</span>
+                    הכדור המטורף
+                </div>
+                <div class="lesson-description">
+                    חקר פיסיקה של תנועה באמצעות כדורים וכדוריות. התלמידים יתנסו בניסויים מרתקים על אנרגיה קינטית, תנופה, האצה והשפעת כוחות על גופים נעים.
+                </div>
+            </div>
+        </div>
+
+        <!-- חטיבות - בוקר -->
+        <div id="morning" class="content-area">
+            <h2 class="section-title">פעילות לחטיבות בשעות הבוקר</h2>
+            
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 1</span>
+                    חקר תגובות כימיות - נחש בועות
+                </div>
+                <div class="lesson-description">
+                    התנסות מרהיבה בתגובות כימיות אקסותרמיות. התלמידים יצפו בתגובת הפירוק של סוכר והיווצרות "נחש" ענק מפחמן.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 2</span>
+                    פיקניק מולקולרי
+                </div>
+                <div class="lesson-description">
+                    היכרות עם המדע שמאחורי המזון. התלמידים יחקרו את המבנה המולקולרי של מזונות שונים ויתנסו בגסטרונומיה מולקולרית.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 3</span>
+                    האטום + הטבלה המחזורית
+                </div>
+                <div class="lesson-description">
+                    צלילה לעולם האטום ולימוד הטבלה המחזורית. התלמידים יבינו את מבנה האטום ואת הארגון של היסודות הכימיים.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 4</span>
+                    מצבי צבירה ומעברים
+                </div>
+                <div class="lesson-description">
+                    חקר מעמיק של מצבי הצבירה - מוצק, נוזל, גז ופלזמה, והתהליכים המתרחשים במעבר ביניהם.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 5</span>
+                    צפיפות - חקר
+                </div>
+                <div class="lesson-description">
+                    גילוי מושג הצפיפות באמצעות ניסויים. התלמידים ייצרו "מגדלי צפיפות" ויבינו מדוע חומרים שונים צפים או שוקעים.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 6</span>
+                    מוזיאון רפואה - מסלול הלב
+                </div>
+                <div class="lesson-description">
+                    סיור לימודי במוזיאון הרפואה המתמקד במערכת הלב וכלי הדם. התלמידים ילמדו על מבנה הלב ותפקודו.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 7</span>
+                    קסם התרכובות
+                </div>
+                <div class="lesson-description">
+                    היכרות עם תרכובות כימיות שונות ותכונותיהן. התלמידים יסנתזו תרכובות פשוטות ויבחנו את תכונותיהן.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 8</span>
+                    אינדיקטורים וכתבי סתרים
+                </div>
+                <div class="lesson-description">
+                    לימוד מעמיק על אינדיקטורים כימיים והשימושים השונים שלהם. הכנת כתבי סוד ופענוחם באמצעות שינויי צבע.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 9</span>
+                    חומצות ובסיסים
+                </div>
+                <div class="lesson-description">
+                    הבנת ההבדלים בין חומצות ובסיסים, סולם ה-pH ותגובות נטרול. ניסויים מעשיים עם חומצות ובסיסים שונים.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 10</span>
+                    דיסקציית לב
+                </div>
+                <div class="lesson-description">
+                    פעילות מעשית בה התלמידים מבצעים דיסקציה של לב בעל חיים, לומדים על מבנהו וחדריו השונים.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 11</span>
+                    טו בשבט: חדר בריחה - סודות צמחי התבלין והמרפא
+                </div>
+                <div class="lesson-description">
+                    פעילות מיוחדת לטו בשבט בה התלמידים פותרים חידות הקשורות לצמחי תבלין ומרפא ותכונותיהם.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 12</span>
+                    חוקרים ונהנים
+                </div>
+                <div class="lesson-description">
+                    פעילות חקר חופשית בה התלמידים בוחרים נושאים מדעיים שמעניינים אותם ומתנסים בניסויים עצמאיים.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 13</span>
+                    פולימרים א+ב
+                </div>
+                <div class="lesson-description">
+                    היכרות עם עולם הפולימרים - מולקולות ענק בעלות תכונות מיוחדות. הכנת פולימרים שונים והתנסות בתכונותיהם.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 14</span>
+                    פולימרים ג'
+                </div>
+                <div class="lesson-description">
+                    המשך חקר הפולימרים והשימושים השונים שלהם בטכנולוגיה ובחיי היומיום. יצירת פולימרים מתקדמים.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 15</span>
+                    החשמל שבלב
+                </div>
+                <div class="lesson-description">
+                    לימוד המערכת החשמלית של הלב - איך הלב מייצר את הקצב שלו. מדידת דופק והבנת פעילות חשמלית של הלב.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 16</span>
+                    חידות וחדרי בריחה - הסודות של ניוטון
+                </div>
+                <div class="lesson-description">
+                    פעילות אינטראקטיבית בה התלמידים פותרים חידות פיסיקליות הקשורות לחוקי ניוטון ותגליותיו.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 17</span>
+                    מוזיאון רפואה - מסלול המוח
+                </div>
+                <div class="lesson-description">
+                    סיור במוזיאון הרפואה המתמקד במערכת העצבים והמוח. התלמידים ילמדו על מבנה המוח ותפקודיו.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 18</span>
+                    האוכל במבט מדעי
+                </div>
+                <div class="lesson-description">
+                    בחינה מדעית של מזונות - ערכים תזונתיים, תגובות כימיות בבישול ועקרונות שימור מזון.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 19</span>
+                    מדע בשירות החוק
+                </div>
+                <div class="lesson-description">
+                    היכרות עם מדע הזיהוי הפלילי - טביעות אצבע, ניתוח דם, DNA וטכניקות חקירה פורנזיות.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">מפגש 20</span>
+                    היופי שבכימיה
+                </div>
+                <div class="lesson-description">
+                    גילוי התגובות הכימיות המרהיבות והיפות ביותר. התלמידים יתנסו בתגובות צבעוניות ומרהיבות.
+                </div>
+            </div>
+        </div>
+
+        <!-- צרכים מיוחדים -->
+        <div id="special" class="content-area">
+            <h2 class="section-title">סילבוס לתלמידים בעלי צרכים מיוחדים</h2>
+            <p style="color: #555; margin-bottom: 25px; font-size: 1.1em;">
+                פעילויות מותאמות לתלמידים עם מוגבלות קוגניטיבית, תקשורתית ובעיות של קשב וריכוז
+            </p>
+            
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">פעילות 1</span>
+                    שעשועי מדע
+                </div>
+                <div class="lesson-description">
+                    התלמידים יתנסו בניסויים מעניינים הנראים כקסמים. השיעור מותאם לגילאים ולסוג המוגבלות, עם דגש על חוויה ויזואלית מרהיבה והצלחה מובטחת.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">פעילות 2</span>
+                    העולם בצבע
+                </div>
+                <div class="lesson-description">
+                    כיצד יוצרים צבע? מהם צבעי הבסיס? התלמידים ילמדו ויתנסו בהכנת צבעים בצורה מעשית וחווייתית, ואף יציירו איתם יצירות אישיות.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">פעילות 3</span>
+                    הכנת ג'לים וסליים
+                </div>
+                <div class="lesson-description">
+                    התלמידים יתנסו בהכנת ג'לים וסליים בעלי מרקמים שונים (רכים וקשים יותר) מחומרים שונים. חוויה חושית מהנה שמפתחת מיומנויות מוטוריות, ויוכלו לקחת את התוצרים הביתה כמשחק.
+                </div>
+            </div>
+
+            <div class="lesson-item">
+                <div class="lesson-title">
+                    <span class="lesson-number">פעילות 4</span>
+                    מדעי הגוף
+                </div>
+                <div class="lesson-description">
+                    התלמידים ילמדו על החשיבות בניקיון הגוף ועל עיקרון פעולתו של הסבון. בפעילות מעשית הם יכינו בעצמם: סבון, משחת שיניים, דאודורנט ושפתון נגד יובש - מוצרים שישתמשו בהם בחיי היומיום.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSyllabus(syllabusId) {
+            // הסרת כל התצוגות הפעילות
+            const allContents = document.querySelectorAll('.content-area');
+            allContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // הסרת הסטטוס הפעיל מכל הכפתורים
+            const allButtons = document.querySelectorAll('.syllabus-btn');
+            allButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // הצגת התוכן הנבחר
+            document.getElementById(syllabusId).classList.add('active');
+
+            // סימון הכפתור כפעיל
+            event.target.classList.add('active');
+
+            // גלילה חלקה לתוכן
+            setTimeout(() => {
+                document.getElementById(syllabusId).scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'nearest' 
+                });
+            }, 100);
+        }
+    </script>
+</body>
+</html>
