@@ -2,10 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --primary-color: #4fc3f7;
-    --secondary-color: #81d4fa;
-    --accent-color: #00acc1;
-    --bg-gradient: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #80deea 100%);
+    --primary-color: #9c27b0;
+    --secondary-color: #ba68c8;
+    --accent-color: #7b1fa2;
+    --bg-gradient: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 50%, #ce93d8 100%);
     --text-color: #1f2937;
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
